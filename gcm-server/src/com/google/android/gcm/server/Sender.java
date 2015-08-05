@@ -21,7 +21,8 @@ import static com.google.android.gcm.server.Constants.JSON_ERROR;
 import static com.google.android.gcm.server.Constants.JSON_FAILURE;
 import static com.google.android.gcm.server.Constants.JSON_MESSAGE_ID;
 import static com.google.android.gcm.server.Constants.JSON_MULTICAST_ID;
-import static com.google.android.gcm.server.Constants.JSON_PAYLOAD;
+import static com.google.android.gcm.server.Constants.JSON_DATA_PAYLOAD;
+import static com.google.android.gcm.server.Constants.JSON_NOTIFICATION_PAYLOAD;
 import static com.google.android.gcm.server.Constants.JSON_REGISTRATION_IDS;
 import static com.google.android.gcm.server.Constants.JSON_RESULTS;
 import static com.google.android.gcm.server.Constants.JSON_SUCCESS;
@@ -400,9 +401,13 @@ public class Sender {
         message.isDelayWhileIdle());
     setJsonField(jsonRequest, PARAM_DRY_RUN, message.isDryRun());
     jsonRequest.put(JSON_REGISTRATION_IDS, registrationIds);
-    Map<String, String> payload = message.getData();
-    if (!payload.isEmpty()) {
-      jsonRequest.put(JSON_PAYLOAD, payload);
+    Map<String, String> dataPayload = message.getData();
+    if (!dataPayload.isEmpty()) {
+      jsonRequest.put(JSON_DATA_PAYLOAD, dataPayload);
+    }
+    Map<String, String> notificationPayload = message.getNotification();
+    if (!notificationPayload.isEmpty()) {
+      jsonRequest.put(JSON_NOTIFICATION_PAYLOAD, dataPayload);
     }
     String requestBody = JSONValue.toJSONString(jsonRequest);
     logger.finest("JSON request: " + requestBody);

@@ -154,7 +154,12 @@ public final class Constants {
   /**
    * JSON-only field representing the payload data.
    */
-  public static final String JSON_PAYLOAD = "data";
+  public static final String JSON_DATA_PAYLOAD = "data";
+  
+  /**
+   * JSON-only field representing the payload data.
+   */
+  public static final String JSON_NOTIFICATION_PAYLOAD = "notification";
 
   /**
    * JSON-only field representing the number of successful messages.

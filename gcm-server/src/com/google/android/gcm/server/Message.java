@@ -62,12 +62,14 @@ public final class Message implements Serializable {
   private final Boolean delayWhileIdle;
   private final Integer timeToLive;
   private final Map<String, String> data;
+  private final Map<String, String> notification;
   private final Boolean dryRun;
   private final String restrictedPackageName;
 
   public static final class Builder {
 
     private final Map<String, String> data;
+    private final Map<String, String> notification;
 
     // optional parameters
     private String collapseKey;
@@ -78,6 +80,7 @@ public final class Message implements Serializable {
 
     public Builder() {
       this.data = new LinkedHashMap<String, String>();
+      this.notification = new LinkedHashMap<String, String>();
     }
 
     /**
@@ -111,6 +114,14 @@ public final class Message implements Serializable {
       data.put(key, value);
       return this;
     }
+    
+    /**
+     * Adds a key/value pair to the payload n.
+     */
+    public Builder addNotificationData(String key, String value) {
+      data.put(key, value);
+      return this;
+    }
 
     /**
      * Sets the dryRun property (default value is {@literal false}).
@@ -138,6 +149,7 @@ public final class Message implements Serializable {
     collapseKey = builder.collapseKey;
     delayWhileIdle = builder.delayWhileIdle;
     data = Collections.unmodifiableMap(builder.data);
+    notification = Collections.unmodifiableMap(builder.notification);
     timeToLive = builder.timeToLive;
     dryRun = builder.dryRun;
     restrictedPackageName = builder.restrictedPackageName;
@@ -184,6 +196,13 @@ public final class Message implements Serializable {
   public Map<String, String> getData() {
     return data;
   }
+  
+  /**
+   * Gets the payload data, which is immutable.
+   */
+  public Map<String, String> getNotification() {
+    return notification;
+  }
 
   @Override
   public String toString() {
@@ -212,6 +231,15 @@ public final class Message implements Serializable {
       builder.delete(builder.length() - 1, builder.length());
       builder.append("}");
     }
+    if (!data.isEmpty()) {
+        builder.append("notification: {");
+        for (Map.Entry<String, String> entry : notification.entrySet()) {
+          builder.append(entry.getKey()).append("=").append(entry.getValue())
+              .append(",");
+        }
+        builder.delete(builder.length() - 1, builder.length());
+        builder.append("}");
+    }	
     if (builder.charAt(builder.length() - 1) == ' ') {
       builder.delete(builder.length() - 2, builder.length());
     }
